@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gustavo dos Santos — Portfólio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Estilo extra (glass + transições suaves) */
+    :root{
+      --glass-bg: rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.08);
+    }
+    [data-theme="light"]{ --glass-bg: rgba(255,255,255,0.8); --glass-border: rgba(0,0,0,0.06); }
+
+    body{ transition: background-color .35s, color .35s; }
+    .glass{ background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(6px); }
+
+    /* Modal de imagem */
+    .modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(2,6,23,0.6); z-index: 50; }
+    .modal-content{ max-width: 92vw; max-height: 86vh; border-radius: .75rem; overflow: hidden; box-shadow: 0 20px 50px rgba(2,6,23,0.7); }
+
+    /* Pequenas animações de entrada */
+    .reveal{ opacity: 0; transform: translateY(10px) scale(.995); transition: opacity .5s ease, transform .5s ease; }
+    .reveal.show{ opacity: 1; transform: translateY(0) scale(1); }
+
+    /* Cartões de dashboard */
+    .card-embed{ height: 14rem; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: .75rem; }
+    .card-embed iframe{ width:100%; height:100%; border:0; }
+
+    /* Responsividade para iframes muito altos */
+    @media (min-width:1024px){ .card-embed{ height: 18rem; } }
+  </style>
+</head>
+
+<body class="bg-slate-900 text-slate-100" data-theme="dark">
+  <div class="min-h-screen flex flex-col items-center py-12 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-6xl flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
+      <div class="flex items-center gap-4">
+        <img src="fotodeperfil.jpeg" alt="Foto Gustavo" class="w-24 h-24 rounded-full object-cover ring-1 ring-slate-700 shadow-lg">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-semibold">Gustavo dos Santos</h1>
+          <p class="text-slate-400 text-sm mt-1">Desenvolvedor | Power Platform · Power BI</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="themeBtn" class="glass px-4 py-2 rounded-full text-sm hover:brightness-105 transition">Alternar Tema</button>
+        <a href="#contato" class="bg-slate-50/6 text-slate-100 glass px-4 py-2 rounded-full text-sm hover:brightness-110 transition">Contato</a>
+      </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Coluna esquerda: Sobre + contatos -->
+      <section class="lg:col-span-1 space-y-6 reveal">
+        <div class="glass p-6 rounded-2xl">
+          <h2 class="text-lg font-medium">Sobre</h2>
+          <p class="text-slate-300 text-sm mt-3 leading-relaxed">Sou especialista em transformar dados em decisões: criação de dashboards interativos, modelagem em Power BI e automações na Power Platform. Gosto de unir clareza visual com performance e métricas acionáveis.</p>
+
+          <div class="mt-4 flex flex-col gap-2 text-sm text-slate-300">
+            <div><strong>Loc:</strong> Rio de Janeiro</div>
+            <div><strong>Foco:</strong> Power BI · Power Apps · Power Automate</div>
+          </div>
+        </div>
+
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-sm font-medium text-slate-200">Contato</h3>
+          <div class="mt-3 flex flex-col gap-2 text-sm">
+            <a class="text-slate-300 hover:underline" href="santogustavotr@gmail.com">✉️ santogustavotr@gmail.com</a>
+            <a class="text-slate-300 hover:underline" href="https://www.linkedin.com/in/luiz-gustavo-dos-santos-76406928a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener">💼 LinkedIn</a>
+            <a class="text-slate-300 hover:underline" href="https://github.com/SantoGuxta" target="_blank" rel="noopener">💻 GitHub</a>
+          </div>
+        </div>
+
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-sm font-medium text-slate-200">Skills</h3>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 glass rounded-full">Power BI</span>
+            <span class="text-xs px-3 py-1 glass rounded-full">DAX</span>
+            <span class="text-xs px-3 py-1 glass rounded-full">Power Apps</span>
+            <span class="text-xs px-3 py-1 glass rounded-full">SQL</span>
+            <span class="text-xs px-3 py-1 glass rounded-full">Visual Design</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Coluna central: Dashboards -->
+      <section class="lg:col-span-2 space-y-6">
+        <div class="glass p-6 rounded-2xl reveal">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="text-lg font-medium">Dashboards</h2>
+              <p class="text-slate-400 text-sm mt-1">Visualizações interativas — clique para abrir em tela cheia.</p>
+            </div>
+            <div class="flex gap-2">
+              <button id="addDashboardBtn" class="px-3 py-1 text-sm glass rounded">+ Adicionar</button>
+            </div>
+          </div>
+
+          <div id="dashboardList" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- cards adicionados via JS -->
+          </div>
+        </div>
+
+        <!-- Galeria pequena (opcional) -->
+        <div class="glass p-6 rounded-2xl reveal">
+          <h3 class="text-md font-medium">Projetos Recentes</h3>
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <article class="p-4 rounded-lg glass flex flex-col gap-3">
+              <div class="h-36 bg-gradient-to-br from-slate-700 to-slate-600 rounded-md flex items-center justify-center text-xs text-slate-300">Preview Dashboard</div>
+              <div class="text-sm text-slate-300">Implementação de ETL e modelo tabular para vendas.</div>
+            </article>
+
+            <article class="p-4 rounded-lg glass flex flex-col gap-3">
+              <div class="h-36 bg-gradient-to-br from-slate-700 to-slate-600 rounded-md flex items-center justify-center text-xs text-slate-300">App Power</div>
+              <div class="text-sm text-slate-300">App de atendimento integrado com automações.</div>
+            </article>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contato" class="w-full max-w-6xl mt-10 text-center text-sm text-slate-400">
+      <div class="glass inline-block px-6 py-4 rounded-2xl">© <span id="ano"></span> Gustavo dos Santos — Todos os direitos reservados.</div>
+    </footer>
+
+  </div>
+
+  <!-- Modal (inserido via JS quando imagens/iframes forem clicados) -->
+  <div id="modal" class="modal hidden" aria-hidden="true" role="dialog">
+    <div class="modal-content">
+      <button id="modalClose" class="p-2 text-sm w-full text-right">✕</button>
+      <div id="modalBody" class="p-4 bg-slate-900 text-slate-100"></div>
+    </div>
+  </div>
+
+  <script>
+    // ====== Tema ======
+    const themeBtn = document.getElementById('themeBtn');
+    const root = document.body;
+    const saved = localStorage.getItem('theme') || 'dark';
+    function applyTheme(t){
+      if(t === 'light'){
+        root.dataset.theme = 'light';
+        root.className = 'bg-slate-50 text-slate-900';
+      } else {
+        root.dataset.theme = 'dark';
+        root.className = 'bg-slate-900 text-slate-100';
+      }
+      localStorage.setItem('theme', t);
+    }
+    applyTheme(saved);
+    themeBtn.addEventListener('click', ()=> applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+    // ====== Dashboard storage & render ======
+    const dashboardList = document.getElementById('dashboardList');
+    const addDashboardBtn = document.getElementById('addDashboardBtn');
+    const stored = JSON.parse(localStorage.getItem('dashboards') || '[]');
+
+    function createCard(db){
+      const card = document.createElement('div');
+      card.className = 'rounded-2xl overflow-hidden glass';
+      card.innerHTML = `
+        <div class="p-4 border-b border-slate-700 font-medium">${escapeHtml(db.title)}</div>
+        <div class="card-embed">
+          <iframe src="${escapeHtml(db.url)}" loading="lazy" title="${escapeHtml(db.title)}"></iframe>
+        </div>
+        <div class="p-3 flex justify-between items-center text-xs text-slate-300">
+          <span>${new Date(db.created).toLocaleDateString()}</span>
+          <div class="flex gap-2">
+            <button class="openBtn px-2 py-1 glass rounded text-xs">Abrir</button>
+            <button class="delBtn px-2 py-1 glass rounded text-xs">Remover</button>
+          </div>
+        </div>
+      `;
+
+      // ações
+      card.querySelector('.openBtn').addEventListener('click', () => openModalWithIframe(db.url));
+      card.querySelector('.delBtn').addEventListener('click', () => { removeDashboard(db.id); card.remove(); });
+
+      dashboardList.appendChild(card);
+    }
+
+    function escapeHtml(str){ return String(str).replace(/[&<>"']/g, function(s){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s]; }); }
+
+    function loadAll(){ stored.forEach(createCard); }
+    loadAll();
+
+    addDashboardBtn.addEventListener('click', ()=>{
+      const title = prompt('Título do dashboard')?.trim();
+      const url = prompt('Cole o link do dashboard (URL pública, ex: Power BI embed)')?.trim();
+      if(!url) return;
+      const db = { id: Date.now(), title: title || 'Sem título', url, created: Date.now() };
+      stored.push(db);
+      localStorage.setItem('dashboards', JSON.stringify(stored));
+      createCard(db);
+    });
+
+    function removeDashboard(id){ const i = stored.findIndex(s=>s.id===id); if(i>-1){ stored.splice(i,1); localStorage.setItem('dashboards', JSON.stringify(stored)); } }
+
+    // ===== Modal para abrir iframe em tela cheia =====
+    const modal = document.getElementById('modal');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    function openModalWithIframe(url){
+      modalBody.innerHTML = `<iframe src="${escapeHtml(url)}" style="width:100%;height:70vh;border:0;border-radius:.5rem;" title="Preview"></iframe>`;
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){ modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); modalBody.innerHTML=''; }
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+
+    // ===== Fade-in reveal (intersection observer) =====
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
+    },{ threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+    // ===== ano no footer =====
+    document.getElementById('ano').textContent = new Date().getFullYear();
+
+  </script>
+</body>
+</html>
